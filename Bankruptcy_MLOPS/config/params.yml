@@ -1,0 +1,58 @@
+preprocessing:
+  rename_columns:
+      '.': '_'
+      'СумОтч': 'Отч'
+      'СумПрдщ': 'Пред'
+      'СумПрдшв': 'ПредПред'
+      'ЧистАктив_На31ДекОтч': 'ЧистАктив_Отч'
+      'ЧистАктив_На31ДекПред': 'ЧистАктив_Пред'
+      'ЧистАктив_На31ДекПрПред': 'ЧистАктив_ПредПред'
+      'ДвиженКап_ПредГод_Кап31дек_Итог': 'ДвижКап_Итог_Пред'
+      'ДвиженКап_ОтчетГод_Кап31дек_Итог': 'ДвижКап_Итог_Отч'
+      'ДвиженКап_Кап31ДекПред_Итог': 'ДвижКап_Итог_ПредПред'
+      'lik_m': 'target'
+  bins_columns:
+    Отнош_ДебитКредит: [0.9, 1.1]
+    Коэф_ТекущЛиквид_Отч: [150, 200]
+  drop_sections: ['СвНП', 'ЦелИсп', 'СвАудит', 'Подписант', 'ДвижениеДен']
+  drop_columns: ['Inn', 'КНД', 'ОКЕИ', 'Период', 'ОтчетГод', 'god', 'НомКорр', 'ДатаДок', 'ВерсФорм', 'ОКУД']
+  drop_by_keyword: ['коррект.', 'ДвиженКап']
+  cols_with_null: ['Актив_Отч', 'Актив_Пред', 'Актив_ПредПред', 'Пассив_Отч', 'Пассив_Пред', 'Пассив_ПредПред']
+  threshold: 0.35
+  bound: 0.95
+  data_type: ['number', 'object']
+  unpack_col_name: balance_data
+  lim_corr_counts: 2
+  raw_train_data_path: ../data/raw/raw_data.csv
+  raw_eval_data_path: ../data/raw/raw_eval_data.csv
+  train_path_proc: ../data/processed/train_ver1.csv
+  train_path_proc_2: ../data/processed/train_ver2.csv
+  unique_values_before_preproc: ../data/processed/uniq_vals.json
+  unique_values_path: ../data/processed/unique_values.json
+  uniq_val_path_with_binar: ../data/processed/unique_values_with_binar.json
+  tasks_path: ../data/tasks.json
+  input_features_path: ../data/param_features.json
+  test_size: [0.25, 0.16]
+  target_column: target
+  random_state: 10
+
+train:
+  n_trials: 5
+  n_folds: 5
+  random_state: 10
+  target_column: target
+  model_path: ../models/model_lgb.joblib
+  study_path: ../models/study.joblib
+  metrics_path: ../report/metrics.json
+  params_path: ../report/best_params.json
+
+evaluate:
+  predict_path: ../data/check/test.csv
+
+endpoints:
+  train: 'http://fastapi:8000/train'
+  prediction_input: 'http://fastapi:8000/predict_input'
+  prediction_from_file: 'http://fastapi:8000/predict'
+#  train: 'http://localhost:8005/train'
+#  prediction_input: 'http://localhost:8005/predict_input'
+#  prediction_from_file: 'http://localhost:8005/predict'

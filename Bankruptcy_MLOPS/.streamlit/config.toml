@@ -1,0 +1,9 @@
+[theme]
+primaryColor="#000000"
+backgroundColor="#dcbaba"
+secondaryBackgroundColor="#ffffff"
+textColor="#000000"
+wide_mode = true
+#[browser]
+#wideMode = true
+
